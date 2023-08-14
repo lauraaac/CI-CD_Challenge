@@ -10,7 +10,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh "docker build -f app/Dockerfile -t lceballosa1/cicd_challenge:$BUILD_NUMBER ."
+                    sh "docker build -f app/Dockerfile -t $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:$BUILD_NUMBER ."
                 }
                 echo 'Build done!'
             }
@@ -19,16 +19,18 @@ pipeline {
             steps {
                 script {
                     sh "npm test"
+                    echo 'Test passed! wii'
                 }
-                echo 'Test passed!'
+                
             }
         }
         stage('Release') {
             steps {
                 script {
-                    sh "docker push lceballosa1/cicd_challenge:$BUILD_NUMBER"
+                    sh "docker push $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:$BUILD_NUMBER"
+                    echo 'Release mounted! siu'
                 }
-                echo 'Release mounted!'
+                
             }
         }
     }
