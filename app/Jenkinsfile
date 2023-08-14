@@ -18,7 +18,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh ""
+                    sh "npm test"
                 }
                 echo 'Test passed!'
             }
@@ -26,7 +26,7 @@ pipeline {
         stage('Release') {
             steps {
                 script {
-                    sh ""
+                    sh "docker push lceballosa1/cicd_challenge:$BUILD_NUMBER"
                 }
                 echo 'Release mounted!'
             }
