@@ -6,4 +6,3 @@ RUN yarn install --production
 CMD ["npm", "run", "test"]
 CMD ["node", "src/index.js"]
 EXPOSE 3000
-CMD ["npm", "run", "test"]
