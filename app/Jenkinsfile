@@ -10,7 +10,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh "docker build -f app/Dockerfile -t $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:$BUILD_NUMBER ."
+                    sh "docker build -f app/Dockerfile -t $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER ."
                 }
                 echo 'Build done!'
             }
