@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    environment {     
+        DOCKERHUB_CREDENTIALS= credentials('dh')     
+    }
+
+
+    stages {
+        stage('Login to Docker Hub') {      	
+            steps {                       	
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'                		
+            echo 'Login Completed!'      
+        }           
+        stage('Build') {
+            steps {
+                script {
+                    sh "docker build -f app/Dockerfile -t lceballosa1/cicd_challenge:$BUILD_NUMBER ."
+                }
+                echo 'Build done!'
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    sh ""
+                }
+                echo 'Test passed!'
+            }
+        }
+        stage('Release') {
+            steps {
+                script {
+                    sh ""
+                }
+                echo 'Release mounted!'
+            }
+        }
+    }
+}
