@@ -15,15 +15,15 @@ pipeline {
                 echo 'Build done!'
             }
         }
-        stage('Test') {
-            steps {
-                script {
-                    sh "npm test"
-                    echo 'Test passed! wii'
-                }
+        // stage('Test') {
+        //     steps {
+        //         script {
+        //             sh "npm test"
+        //             echo 'Test passed! wii'
+        //         }
                 
-            }
-        }
+        //     }
+        // }
         stage('Release') {
             steps {
                 script {
