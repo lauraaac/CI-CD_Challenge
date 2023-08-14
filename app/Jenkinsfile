@@ -27,7 +27,8 @@ pipeline {
         stage('Release') {
             steps {
                 script {
-                    sh "docker push $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:$BUILD_NUMBER"
+                    sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
+                    sh "docker push $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
                     echo 'Release mounted! siu'
                 }
                 
