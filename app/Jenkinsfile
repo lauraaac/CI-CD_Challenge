@@ -19,9 +19,9 @@ pipeline {
         }
         stage('Test') {
             steps {
-                script {
-                    sh "npm app/test"
-                    echo 'Test passed! wii'
+                dir('app/src') {
+                    sh 'npm install'
+                    sh 'npm test'
                 }
                 
             }
