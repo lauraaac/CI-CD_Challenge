@@ -42,10 +42,10 @@ pipeline {
             }
             steps {
                 script {
-                    dir('app/src') {
-                        sh "docker run -p 3000:3000 $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
-                        echo 'Release mounted! siu'
-                    }
+                    sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
+                    sh "docker build -f app/Dockerfile -t $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER ."
+                    sh "docker run -p 3000:3000 $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
+                    echo 'Release mounted! siu'
                     
                 }
                 
