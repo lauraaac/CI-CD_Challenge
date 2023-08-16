@@ -13,6 +13,7 @@ pipeline {
             steps {
                 script {
                     sh "docker build -f app/Dockerfile -t $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER ."
+                    sh "docker run -p 3000:3000 $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
                 }
                 echo 'Build done!'
             }
@@ -36,20 +37,20 @@ pipeline {
                 
             }
         }
-        stage('Deploy') {
-            agent { 
-                label 'slave1'
-            }
-            steps {
-                script {
-                    sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
-                    sh "docker build -f app/Dockerfile -t $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER ."
-                    sh "docker run -p 3000:3000 $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
-                    echo 'Release mounted! siu'
+        // stage('Deploy') {
+        //     agent { 
+        //         label 'slave1'
+        //     }
+        //     steps {
+        //         script {
+        //             sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
+        //             sh "docker build -f app/Dockerfile -t $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER ."
+        //             sh "docker run -p 3000:3000 $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
+        //             echo 'Release mounted! siu'
                     
-                }
+        //         }
                 
-            }
-        }
+        //     }
+        // }
     }
 }
