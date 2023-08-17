@@ -11,16 +11,22 @@ pipeline {
             steps {
                 script {
                     sh "docker build -f app/Dockerfile -t $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER ./app/"
+                    if (env.BRANCH_NAME.startsWith("feature/")) {
+                        echo "Build in ${env.BRANCH_NAME}"
+                    } else if (env.BRANCH_NAME.startsWith("main")) {
+                        echo "Build in ${env.BRANCH_NAME}"
+                    }
                 }
-                echo 'Build done!'
             }
         }
         stage('Release') {
             steps {
                 script {
-                    sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
-                    sh "docker push $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
-                    echo 'Release mounted! siu'
+                    if (env.BRANCH_NAME.startsWith("main")) {
+                        sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
+                        sh "docker push $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
+                        echo "Realsed in ${env.BRANCH_NAME}"
+                    }                   
                 }
                 
             }
@@ -34,6 +40,11 @@ pipeline {
                     sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
                     sh "docker run -p 3000:3000 $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
                     echo 'Release mounted! siu'
+                    if (env.BRANCH_NAME.startsWith("feature/")) {
+                        echo "Deploy in ${env.BRANCH_NAME}"
+                    } else if (env.BRANCH_NAME.startsWith("main")) {
+                        echo "Deploy in ${env.BRANCH_NAME}"
+                    }
                     
                 }
                 
