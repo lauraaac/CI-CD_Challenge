@@ -22,28 +22,38 @@ pipeline {
         stage('Release') {
             steps {
                 script {
-                    if (env.BRANCH_NAME.startsWith("main")) {
-                        sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
-                        sh "docker push $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
+                    sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
+                    sh "docker push $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
+                    if (env.BRANCH_NAME.startsWith("feature/")) { 
                         echo "Realsed in ${env.BRANCH_NAME}"
-                    }                   
+                    }  else if (env.BRANCH_NAME.startsWith("main")) {
+                        echo "Build in ${env.BRANCH_NAME}"
+                    }                  
                 }
                 
             }
         }
         stage('Deploy') {
+            
             agent { 
                 label 'slave1'
             }
             steps {
                 script {
-                    sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
-                    sh "docker run -p 3000:3000 $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
-                    echo 'Release mounted! siu'
+                    
                     if (env.BRANCH_NAME.startsWith("feature/")) {
+                        sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
+                        sh "docker run -p 3000:3000 $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
+                        echo 'Release mounted! siu'
                         echo "Deploy in ${env.BRANCH_NAME}"
                     } else if (env.BRANCH_NAME.startsWith("main")) {
+                        input message: "Ready to deploy?",ok:"Yes",parameters: [booleanParam(name: 'deploy', defaultValue: false)]
+                        sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
+                        sh "docker run -p 3000:3000 $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
+                        echo 'Release mounted! siu'
                         echo "Deploy in ${env.BRANCH_NAME}"
+
+                        
                     }
                     
                 }
