@@ -47,7 +47,15 @@ pipeline {
                     if (env.BRANCH_NAME.startsWith("feature/")) {
                         echo "Deploy in ${env.BRANCH_NAME}"
                     } else if (env.BRANCH_NAME.startsWith("main")) {
-                        echo "Deploy in ${env.BRANCH_NAME}"
+                        input message: "Do u want to deploy?", ok: 'Yes',
+                        parameters: [booleanParam(name: 'deploy', defaultValue: false)], timeout: time(minutes: 5)
+                        if(params.deploy){
+                            sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
+                            sh "docker run -p 3000:3000 $DOCKERHUB_CREDENTIALS_USR/cicd_challenge:1.0.0-$BUILD_NUMBER"
+                            echo 'Release mounted! siu'
+                            echo "Deploy in ${env.BRANCH_NAME}"
+
+                        }
                     }
                     
                 }
